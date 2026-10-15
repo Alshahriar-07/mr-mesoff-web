@@ -1,6 +1,46 @@
 (function () {
   let frontendErrorShown = false;
+  let introOverlay = null;
+  const removeIntro = () => {
+    introOverlay?.remove();
+    introOverlay = null;
+  };
+  const startIntro = () => {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    try {
+      if (window.sessionStorage.getItem("mrMesoffIntroSeen") === "1") return;
+      window.sessionStorage.setItem("mrMesoffIntroSeen", "1");
+    } catch {
+      return;
+    }
+    const overlay = document.createElement("div");
+    overlay.className = "intro-overlay";
+    overlay.setAttribute("aria-hidden", "true");
+    overlay.innerHTML = '<div class="intro-content"><img class="intro-logo" src="/assets/dark/logo.png" alt="" /><span class="intro-brand-name">MR MESOFF</span><span class="intro-progress-track"><span class="intro-progress"></span></span></div>';
+    document.body.appendChild(overlay);
+    introOverlay = overlay;
+    let isFinishing = false;
+    let fallbackTimer;
+    const remove = () => {
+      if (introOverlay !== overlay) return;
+      overlay.remove();
+      introOverlay = null;
+    };
+    const finish = () => {
+      if (isFinishing || introOverlay !== overlay) return;
+      isFinishing = true;
+      window.clearTimeout(fallbackTimer);
+      overlay.classList.add("is-leaving");
+      overlay.addEventListener("animationend", (event) => {
+        if (event.target === overlay) remove();
+      }, { once: true });
+      window.setTimeout(remove, 250);
+    };
+    overlay.querySelector(".intro-progress").addEventListener("animationend", finish, { once: true });
+    fallbackTimer = window.setTimeout(finish, 1500);
+  };
   const showFrontendError = () => {
+    removeIntro();
     const main = document.querySelector("main");
     if (!main || frontendErrorShown) return;
     frontendErrorShown = true;
@@ -13,11 +53,6 @@
   window.addEventListener("error", (event) => {
     if (event.target !== window || !event.error) return;
     if (isDevelopment) console.error("Unhandled MR MESOFF frontend error.", event.error);
-    showFrontendError();
-  });
-  window.addEventListener("unhandledrejection", (event) => {
-    if (isDevelopment) console.error("Unhandled MR MESOFF promise rejection.", event.reason);
-    event.preventDefault();
     showFrontendError();
   });
   document.addEventListener("click", (event) => {
@@ -112,7 +147,7 @@
 
   const header = document.querySelector("[data-site-header]");
   if (header) {
-    header.innerHTML = `<a class="brand" href="/" aria-label="MR MESOFF home"><img src="/assets/light/logo.png" alt="MR MESOFF" /></a>
+    header.innerHTML = `<a class="brand" href="/"><img src="/assets/light/logo.png" alt="" /><span class="brand-name">MR MESOFF</span></a>
       <button class="menu-toggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="primary-navigation"><span></span><span></span><span class="sr-only">Open menu</span></button>
       <nav class="primary-nav" id="primary-navigation" aria-label="Main navigation">${navItems.map(([label, href]) => link(label, href, path === href.replace(/\/$/, "") ? "current" : "")).join("")}${link(`${icon("download")}<span>Download app</span>`, "/download/", "nav-cta")}</nav>`;
   }
@@ -137,7 +172,6 @@
       recoveryActions.insertAdjacentHTML("beforeend", '<a class="button secondary" href="/contact/">Contact support</a>');
     }
   }
-
   const toggle = document.querySelector(".menu-toggle");
   const nav = document.querySelector(".primary-nav");
   if (toggle && nav) {
@@ -496,4 +530,5 @@
     revealItems.forEach((item) => observer.observe(item));
     document.documentElement.classList.add("motion-ready");
   }
+  startIntro();
 })();

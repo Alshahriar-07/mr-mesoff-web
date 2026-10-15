@@ -2,6 +2,10 @@
 
 This repository contains the public MR MESOFF website as static HTML, CSS, and JavaScript. Routes are served from their directory `index.html` files. `404.html` is the branded not-found fallback for compatible static hosting, including Vercel.
 
+## Local preview
+
+Install the Vercel CLI, then run `vercel dev --local --listen 127.0.0.1:4173` from the project root. This uses the same static route and custom 404 behavior as Vercel. Python's `http.server` does not apply the repository's `404.html` fallback.
+
 ## Contact form
 
 The contact page posts to Web3Forms at `https://api.web3forms.com/submit`. The configured access key is in `site-config.js` under `web3forms.accessKey`. The supplied key is a Web3Forms public access key; the provider documents that it is intended to appear in frontend code. It is not a private backend secret. The form only displays a success state when the provider returns a successful response.
