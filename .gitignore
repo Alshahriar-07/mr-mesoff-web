@@ -1,0 +1,40 @@
+/plan/
+/Plan/
+
+# Dependencies and generated output
+node_modules/
+dist/
+build/
+.next/
+out/
+.vercel/
+coverage/
+
+# Local configuration and secrets
+.env
+.env.*
+!.env.example
+!.env.*.example
+
+# Python environments and caches
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Temporary and operating-system files
+*.log
+*.tmp
+*.swp
+*.swo
+*.bak
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# Local IDE configuration
+.idea/
+.vscode/
