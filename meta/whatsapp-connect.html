@@ -158,9 +158,8 @@
         config_id: configId,
         response_type: "code",
         override_default_response_type: true,
-        extras: wabaId
-          ? { setup: {}, featureType: "", sessionInfoVersion: "3" }
-          : { setup: {}, featureType: "", sessionInfoVersion: "3" }
+        // wabaId is informational only; Meta requires a fixed extras shape.
+        extras: { setup: {}, featureType: "", sessionInfoVersion: "3" }
       },
       function (response) {
         waitEl.style.display = "none";

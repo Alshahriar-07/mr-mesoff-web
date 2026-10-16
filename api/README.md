@@ -53,11 +53,12 @@ CommonJS is used deliberately so no `type: module` assumption exists).
 ## Local function test
 
 ```bash
-node --test api-tests/            # from this repository's root
+node --test api-tests/callback.test.cjs api-tests/site-package.test.cjs
+# run from this repository's root
 ```
 
-(`api-tests/callback.test.js` drives the exported handler with mock
-req/res objects — no network, no deployment needed.)
+(The suites drive the exported handler and the page's inline script with
+mock req/res + DOM stubs — no network, no deployment needed.)
 
 ## Security properties (implemented, not aspirational)
 

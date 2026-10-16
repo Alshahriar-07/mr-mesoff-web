@@ -6,9 +6,14 @@
   if (!panel || !button || !status) return;
 
   var platform = panel.dataset.metaPlatform;
+  // Official Facebook Login for Business scopes — must match what the
+  // desktop backend requires after completion (backend README §18.5):
+  // Instagram needs the instagram_business_* scopes on the Professional
+  // account's linked Page; Messenger needs the pages_messaging family.
+  // business_management is required for business-owned assets.
   var scopes = {
-    instagram: ["instagram_basic", "instagram_manage_messages", "pages_show_list", "pages_manage_metadata"],
-    messenger: ["pages_show_list", "pages_messaging", "pages_manage_metadata"]
+    instagram: ["instagram_business_basic", "instagram_business_manage_messages", "pages_show_list", "business_management"],
+    messenger: ["pages_show_list", "pages_manage_messaging", "pages_read_engagement", "pages_messaging", "business_management"]
   };
   var params = new URLSearchParams(window.location.search);
   var signedState = params.get("ctx") || params.get("state") || "";

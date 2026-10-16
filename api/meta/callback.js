@@ -21,8 +21,9 @@
 module.exports = async (req, res) => {
   res.setHeader(
     "Content-Security-Policy",
-    "default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; connect-src 'self' http://127.0.0.1:* http://localhost:*; img-src 'self' data:; form-action 'none'; base-uri 'none'"
+    "default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; connect-src 'self' http://127.0.0.1:* http://localhost:*; img-src 'self' data:; form-action 'none'; frame-ancestors 'none'; base-uri 'none'"
   );
+  res.setHeader("X-Frame-Options", "DENY");
   res.setHeader("Cache-Control", "no-store, max-age=0");
   res.setHeader("X-Content-Type-Options", "nosniff");
   res.setHeader("Referrer-Policy", "no-referrer");
@@ -51,8 +52,9 @@ module.exports = async (req, res) => {
   // Meta may report OAuth errors directly at the redirect (top-level
   // error parameters). Relay the human-readable reason verbatim.
   const providerError = q.error || q.error_reason || "";
+  const errorDetail = q.error_description || q.error_message || "";
   const errorLine = providerError
-    ? `${providerError}${q.error_description ? ` — ${q.error_description}` : ""}${q.error_code ? ` (code ${q.error_code})` : ""}`.slice(0, 1200)
+    ? `${providerError}${errorDetail ? ` — ${errorDetail}` : ""}${q.error_code ? ` (code ${q.error_code})` : ""}`.slice(0, 1200)
     : "";
   const cancelled = /^(access_denied|user_denied|user_cancelled|cancelled)$/i.test(providerError);
 
@@ -223,7 +225,9 @@ function page(bootJson) {
       var b64 = (String(state).split(".")[0] || "").replace(/-/g, "+").replace(/_/g, "/");
       while (b64.length % 4) b64 += "=";
       var raw = atob(b64);
-      return JSON.parse(decodeURIComponent(escape(raw)));
+      var bytes = new Uint8Array(raw.length);
+      for (var i = 0; i < raw.length; i += 1) bytes[i] = raw.charCodeAt(i) & 0xff;
+      return JSON.parse(new TextDecoder("utf-8").decode(bytes));
     } catch (e) { return null; }
   }
 
@@ -245,12 +249,21 @@ function page(bootJson) {
   }
   var endpoint = "http://127.0.0.1:" + port + "/api/v1/channels/" + platform + "/connection/complete";
 
+  // The handoff is one local POST; bound it in time so a stalled desktop
+  // process (hung sidecar, firewall prompt) cannot leave the page in the
+  // waiting state forever.
+  var handoffTimeoutMs = 25000;
+  var abort = null;
+  if (typeof window.AbortController === "function") abort = new window.AbortController();
+  if (abort) window.setTimeout(function () { abort.abort(); }, handoffTimeoutMs);
+
   fetch(endpoint, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     credentials: "omit",
     cache: "no-store",
-    body: JSON.stringify({ code: boot.code, state: boot.state })
+    body: JSON.stringify({ code: boot.code, state: boot.state }),
+    signal: abort ? abort.signal : undefined
   })
     .then(function (res) {
       return res
@@ -268,9 +281,13 @@ function page(bootJson) {
           " — resolve the issue and connect again from Settings → Messaging channels.");
       }
     })
-    .catch(function () {
-      show("bad", "The MR MESOFF desktop app could not be reached on this computer (loopback rpc failed).");
+    .catch(function (err) {
       if (badTitle) badTitle.textContent = "Desktop app unreachable.";
+      if (abort && (err && (err.name === "AbortError" || String(err).indexOf("Aborted") !== -1))) {
+        show("bad", "The MR MESOFF desktop app did not respond within " + Math.round(handoffTimeoutMs / 1000) + " seconds. Keep the app running and connect again from Settings → Messaging channels. Authorization codes are single-use — a new one is issued on the next Connect.");
+      } else {
+        show("bad", "The MR MESOFF desktop app could not be reached on this computer (loopback rpc failed).");
+      }
     });
 })();
 </script>
