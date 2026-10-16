@@ -1,0 +1,11 @@
+{
+  "name": "mrmesoff-api-relay",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Portable Vercel Functions for MR MESOFF Meta OAuth relay (zero runtime dependencies)",
+  "type": "commonjs",
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {}
+}

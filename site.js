@@ -128,6 +128,7 @@
   const navItems = [
     ["Features", "/features/"],
     ["How it works", "/how-it-works/"],
+    ["Connect", "/meta/"],
     ["Pricing", "/pricing/"],
     ["About", "/about/"],
     ["Contact", "/contact/"]

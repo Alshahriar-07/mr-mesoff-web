@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="robots" content="noindex, nofollow" />
+  <title>Connect Your Channels — MR MESOFF</title>
+  <meta name="description" content="Choose a supported Meta messaging channel to connect with MR MESOFF." />
+  <link rel="icon" href="/assets/light/appicon.ico" sizes="any" />
+  <link rel="stylesheet" href="/styles.css" />
+  <style>
+    .meta-entry { padding: 76px 0 92px; }
+    .meta-entry h1 { max-width: 760px; font-size: clamp(38px, 5vw, 58px); }
+    .meta-entry .lead { max-width: 650px; margin-top: 18px; font-size: 16px; }
+    .channel-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin-top: 42px; }
+    .channel-card { position: relative; min-width: 0; padding: 22px; border: 1px solid var(--line); border-radius: 7px; background: #fff; transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease; }
+    .channel-card::before { content: ""; position: absolute; top: 0; right: 0; left: 0; height: 3px; }
+    .channel-card:hover { transform: translateY(-3px); border-color: #c9ccc0; box-shadow: 0 12px 28px rgba(26, 29, 20, .08); }
+    .channel-icon { width: 38px; height: 38px; object-fit: contain; margin-bottom: 20px; }
+    .channel-card h2 { font-size: 19px; }
+    .channel-card p { min-height: 62px; margin-top: 9px; color: var(--muted); font-size: 13px; line-height: 1.6; }
+    .channel-card .button { width: 100%; min-height: 42px; margin-top: 16px; font-size: 12px; }
+    .channel-card .button[aria-disabled="true"] { opacity: .45; pointer-events: none; }
+    .channel-card.whatsapp::before { background: #25d366; }
+    .channel-card.instagram::before { background: linear-gradient(100deg, #d83b73, #f1bd4b); }
+    .channel-card.messenger::before { background: #1877f2; }
+    .connection-note { margin-top: 25px; padding: 15px 17px; border-left: 3px solid var(--ink); background: var(--soft); color: #4c4d47; font-size: 12px; line-height: 1.7; }
+    .launch-status { margin-top: 16px; padding: 13px 15px; border: 1px solid var(--line); border-radius: 6px; background: #fff; color: #4c4d47; font-size: 13px; }
+    .install-dialog { width: min(470px, calc(100% - 32px)); max-width: none; padding: 0; border: 1px solid #d9dbd3; border-radius: 9px; color: var(--ink); background: #fff; box-shadow: 0 26px 80px rgba(18, 20, 15, .24); }
+    .install-dialog::backdrop { background: rgba(18, 20, 15, .52); backdrop-filter: blur(3px); }
+    .install-dialog[open] { animation: metaDialogIn .18s ease-out both; }
+    .install-dialog-content { padding: clamp(22px, 5vw, 30px); }
+    .install-dialog .eyebrow { margin-bottom: 9px; }
+    .install-dialog h2 { font-size: 25px; line-height: 1.18; }
+    .install-dialog p:not(.eyebrow) { margin-top: 11px; color: var(--muted); font-size: 13px; line-height: 1.65; }
+    .install-actions { display: flex; flex-wrap: wrap; gap: 9px; margin-top: 22px; }
+    .install-actions .button { min-height: 43px; padding-inline: 15px; font-size: 12px; }
+    .install-actions .button:disabled { cursor: wait; opacity: .62; }
+    .install-error[hidden], .install-prompt[hidden] { display: none; }
+    @keyframes metaDialogIn { from { opacity: 0; transform: translateY(6px) scale(.99); } to { opacity: 1; transform: none; } }
+    @media (max-width: 760px) { .channel-grid { grid-template-columns: 1fr; } .channel-card { display: grid; grid-template-columns: 42px minmax(0, 1fr); column-gap: 14px; align-items: start; } .channel-icon { grid-row: span 3; margin-bottom: 0; } .channel-card p { min-height: 0; } .channel-card .button { grid-column: 2; } }
+    @media (max-width: 460px) { .install-actions { flex-direction: column; } .install-actions .button { width: 100%; } }
+    @media (prefers-reduced-motion: reduce) { .channel-card { transition: none; } .channel-card:hover { transform: none; } .install-dialog[open] { animation: none; } }
+  </style>
+  <script src="/page-transitions.js"></script>
+  <script src="/site-config.js" defer></script>
+  <script src="/site.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="site-header" data-site-header></header>
+  <main id="main">
+    <section class="meta-entry container">
+      <p class="eyebrow">Official Meta authorization</p>
+      <h1>Connect a business channel.</h1>
+      <p class="lead">Choose the channel you manage. MR MESOFF uses Meta's authorization flow; it never asks for your Meta password.</p>
+      <div class="channel-grid" aria-label="Available Meta connection flows">
+        <article class="channel-card whatsapp">
+          <img class="channel-icon" src="https://cdn.simpleicons.org/whatsapp/25D366" alt="" width="38" height="38" />
+          <h2>WhatsApp Business</h2>
+          <p>Set up an eligible WhatsApp Business Platform account through Meta Embedded Signup.</p>
+          <a class="button" href="/meta/whatsapp-connect.html" data-platform-link="whatsapp">Connect WhatsApp <span class="arrow" aria-hidden="true">&#8594;</span></a>
+        </article>
+        <article class="channel-card instagram">
+          <img class="channel-icon" src="https://cdn.simpleicons.org/instagram/E1306C" alt="" width="38" height="38" />
+          <h2>Instagram Messaging</h2>
+          <p>Authorize messaging for an eligible Instagram Professional account.</p>
+          <a class="button" href="/meta/instagram-connect.html" data-platform-link="instagram">Connect Instagram <span class="arrow" aria-hidden="true">&#8594;</span></a>
+        </article>
+        <article class="channel-card messenger">
+          <img class="channel-icon" src="https://cdn.simpleicons.org/messenger/0866FF" alt="" width="38" height="38" />
+          <h2>Facebook Messenger</h2>
+          <p>Authorize an eligible Facebook Page for customer messaging.</p>
+          <a class="button" href="/meta/messenger-connect.html" data-platform-link="messenger">Connect Messenger <span class="arrow" aria-hidden="true">&#8594;</span></a>
+        </article>
+      </div>
+      <p class="connection-note">A short-lived signed connection session from the running MR MESOFF desktop app is required to complete authorization. If you arrived here directly, start Connect from the app. Connection status is confirmed by the app after Meta authorization; this website does not display or store access tokens.</p>
+      <div class="launch-status" data-launch-status role="status" aria-live="polite" hidden></div>
+    </section>
+  </main>
+  <dialog class="install-dialog" data-install-dialog aria-labelledby="install-title" aria-describedby="install-description">
+    <div class="install-dialog-content install-prompt" data-install-prompt>
+      <p class="eyebrow">MR MESOFF Desktop</p>
+      <h2 id="install-title">Is MR MESOFF Desktop installed on your device?</h2>
+      <p id="install-description">The desktop app securely starts the selected Meta connection and receives the verified result.</p>
+      <div class="install-actions">
+        <button class="button" type="button" data-install-yes>Yes, Continue</button>
+        <button class="button secondary" type="button" data-install-no>No, Download Desktop</button>
+      </div>
+    </div>
+    <div class="install-dialog-content" data-install-wait hidden>
+      <p class="eyebrow">Opening the desktop app</p>
+      <h2>Continue in MR MESOFF Desktop.</h2>
+      <p>The app will open the official Meta authorization in your browser. This page will not report a connection until the app verifies it.</p>
+    </div>
+    <div class="install-dialog-content install-error" data-install-error hidden>
+      <p class="eyebrow">Desktop app unavailable</p>
+      <h2>MR MESOFF Desktop could not be opened.</h2>
+      <p>Check that the app is installed, then retry. You can also open the download page.</p>
+      <div class="install-actions">
+        <button class="button" type="button" data-install-retry>Retry</button>
+        <button class="button secondary" type="button" data-install-download>Download Desktop</button>
+        <button class="button secondary" type="button" data-install-close>Close</button>
+      </div>
+    </div>
+  </dialog>
+  <footer class="site-footer" data-site-footer></footer>
+  <script src="/meta/hub.js" defer></script>
+  <script src="/meta/install-check.js" defer></script>
+</body>
+</html>

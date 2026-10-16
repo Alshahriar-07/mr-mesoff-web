@@ -23,5 +23,5 @@ window.MR_MESOFF_CONFIG = Object.freeze({
   pricing: { status: "planned", monthlyUsd: 20, yearlyUsd: 199, checkoutUrl: "" },
   legal: { effectiveDate: "", operatorName: "[OPERATOR NAME REQUIRED]", operatorAddress: "", privacyContactEmail: "seedcode.ai@gmail.com", governingLaw: "" },
   web3forms: { accessKey: "ffe9d16a-ed2b-4ef7-830c-cf0aedbabca4", endpoint: "https://api.web3forms.com/submit" },
-  meta: { redirectUri: "", deletionCallbackUrl: "" }
+  meta: { appId: "", redirectUri: "https://mrmesoff.vercel.app/api/meta/callback", graphVersion: "v25.0", deletionCallbackUrl: "" }
 });

@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="robots" content="noindex, nofollow" />
+  <title>Connect Instagram Messaging — MR MESOFF</title>
+  <meta name="description" content="Authorize Instagram Messaging for MR MESOFF through Meta." />
+  <link rel="icon" href="/assets/light/appicon.ico" sizes="any" />
+  <link rel="stylesheet" href="/styles.css" />
+  <style>
+    .auth-wrap { width: min(620px, calc(100% - 40px)); margin: 64px auto 90px; padding: clamp(22px, 5vw, 38px); border: 1px solid var(--line); border-radius: 8px; background: #fff; box-shadow: 0 18px 48px rgba(30, 25, 27, .08); animation: arrive .32s ease-out both; }
+    .brand-line { display: flex; align-items: center; gap: 10px; margin-bottom: 34px; font-size: 13px; font-weight: 700; }
+    .brand-line img { width: 34px; height: 34px; object-fit: contain; }
+    .platform-icon { width: 44px; height: 44px; object-fit: contain; margin-bottom: 18px; }
+    .auth-wrap h1 { font-size: clamp(28px, 5vw, 38px); }
+    .auth-wrap .intro { margin-top: 13px; color: var(--muted); font-size: 14px; }
+    .auth-button { min-height: 46px; margin-top: 24px; padding: 0 18px; border: 0; border-radius: 6px; background: #c45268; color: #fff; font-size: 13px; font-weight: 700; cursor: pointer; transition: background .18s ease, transform .18s ease; }
+    .auth-button:hover:not(:disabled) { background: #a94058; transform: translateY(-1px); }
+    .auth-button:disabled { opacity: .55; cursor: wait; }
+    .auth-status { margin-top: 18px; padding: 13px 15px; border: 1px solid var(--line); border-radius: 6px; background: #f6f6f3; color: #56574f; font-size: 13px; }
+    .auth-status[data-kind="error"] { border-color: #efd1cb; background: #fff0ed; color: #963f37; }
+    .auth-status[data-kind="cancel"] { background: #f5f6f2; }
+    .auth-foot { margin-top: 25px; padding-top: 18px; border-top: 1px solid var(--line); color: var(--muted); font-size: 12px; line-height: 1.7; }
+    .auth-back { display: inline-block; margin-top: 18px; color: #4d4e46; font-size: 12px; font-weight: 700; }
+    @keyframes arrive { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+    @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; } }
+  </style>
+  <script src="/site-config.js" defer></script>
+  <script src="/meta/connect.js" defer></script>
+</head>
+<body>
+  <main class="auth-wrap" data-meta-platform="instagram">
+    <div class="brand-line"><img src="/assets/light/logo.png" alt="" /><span>MR MESOFF</span></div>
+    <img class="platform-icon" src="https://cdn.simpleicons.org/instagram/E1306C" alt="" width="44" height="44" />
+    <p class="eyebrow">Instagram Messaging</p>
+    <h1>Connect your professional account.</h1>
+    <p class="intro">Continue to Meta to authorize messaging for an eligible Instagram Professional account. Personal accounts may not be eligible.</p>
+    <button class="auth-button" type="button" data-meta-connect disabled>Preparing secure connection...</button>
+    <div class="auth-status" data-meta-status role="status" aria-live="polite">Checking the signed connection session.</div>
+    <p class="auth-foot">Your authorization is handed to the MR MESOFF desktop app on this computer. This website does not store tokens or show a connected status before the app confirms it.</p>
+    <a class="auth-back" href="/meta/">Back to channel selection</a>
+  </main>
+</body>
+</html>

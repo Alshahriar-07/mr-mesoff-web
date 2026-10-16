@@ -138,6 +138,7 @@
     }
   };
   const shouldHandleLink = (anchor, event) => {
+    if (anchor.hasAttribute("data-platform-link")) return false;
     if (event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return false;
     if (anchor.hasAttribute("download") || (anchor.target && anchor.target !== "_self") || anchor.relList.contains("external")) return false;
     let url;
