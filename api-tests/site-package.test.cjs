@@ -72,11 +72,33 @@ test("instagram + messenger pages authorize via Meta and hand off to loopback", 
   }
   const connect = read("meta", "connect.js");
   assert.match(connect, /dialog\/oauth/, "FB Login dialog is the authorize entry");
-  assert.match(connect, /instagram_business_basic/, "current IG permission name");
-  assert.match(connect, /instagram_business_manage_messages/, "current IG messaging permission name");
-  assert.match(connect, /pages_manage_messaging/, "current Messenger permission name");
-  assert.doesNotMatch(connect, /instagram_basic(?!\w)/, "legacy instagram_basic scope removed");
-  assert.doesNotMatch(connect, /instagram_manage_messages/, "legacy IG messaging scope removed");
+  // AUDITED (2026-10) against the Meta permission reference. This page
+  // authorizes through FACEBOOK Login (facebook.com/<v>/dialog/oauth) with
+  // a Facebook User/Page token, so the Instagram API with Facebook Login
+  // permission names apply: instagram_basic + instagram_manage_messages.
+  // The instagram_business_* family belongs to the SEPARATE Business Login
+  // for Instagram flow (graph.instagram.com, Instagram User token) and
+  // grants nothing here — requesting it was the previous bug. Unneeded or
+  // wrong scopes are an explicit App Review rejection reason.
+  // Assertions run against the ACTUAL scope lists (not the whole file, which
+  // also documents *why* the business-login scopes are excluded).
+  const scopesBlock = connect.match(/var scopes = \{[\s\S]*?\n  \};/);
+  assert.ok(scopesBlock, "connect.js declares an explicit scope map");
+  const scopesText = scopesBlock[0];
+  const igScopes = scopesText.match(/instagram: \[([^\]]*)\]/)[1];
+  const msgrScopes = scopesText.match(/messenger: \[([^\]]*)\]/)[1];
+
+  for (const required of ["instagram_basic", "instagram_manage_messages", "pages_show_list", "pages_read_engagement"]) {
+    assert.ok(igScopes.includes(`"${required}"`), `Instagram scope list must request ${required}`);
+  }
+  for (const required of ["pages_show_list", "pages_manage_messaging", "pages_manage_metadata", "pages_read_engagement"]) {
+    assert.ok(msgrScopes.includes(`"${required}"`), `Messenger scope list must request ${required}`);
+  }
+  assert.doesNotMatch(
+    scopesText,
+    /instagram_business_/,
+    "Business Login for Instagram scopes grant nothing in a Facebook Login flow"
+  );
 });
 
 test("relay function holds no secrets", () => {

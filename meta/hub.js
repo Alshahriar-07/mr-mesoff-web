@@ -4,11 +4,17 @@
   var signedState = params.get("ctx") || params.get("state") || "";
   if (!signedState) return;
 
+  // Structural payload decode only; the HMAC signature is verified by the
+  // desktop backend. TextDecoder keeps non-ASCII payloads intact (the
+  // deprecated escape()/decodeURIComponent pair does not).
   function payloadOf(value) {
     try {
       var encoded = (String(value).split(".")[0] || "").replace(/-/g, "+").replace(/_/g, "/");
       while (encoded.length % 4) encoded += "=";
-      return JSON.parse(decodeURIComponent(escape(atob(encoded))));
+      var raw = atob(encoded);
+      var bytes = new Uint8Array(raw.length);
+      for (var i = 0; i < raw.length; i += 1) bytes[i] = raw.charCodeAt(i) & 0xff;
+      return JSON.parse(new TextDecoder("utf-8").decode(bytes));
     } catch (error) {
       return null;
     }
