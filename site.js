@@ -36,8 +36,15 @@
       }, { once: true });
       window.setTimeout(remove, 250);
     };
-    overlay.querySelector(".intro-progress").addEventListener("animationend", finish, { once: true });
-    fallbackTimer = window.setTimeout(finish, 1500);
+    const isDownloadPage = window.location.pathname.replace(/\/$/, "") === "/download";
+    if (isDownloadPage) {
+      window.addEventListener("load", finish, { once: true });
+      if (document.readyState === "complete") finish();
+      fallbackTimer = window.setTimeout(finish, 1200);
+    } else {
+      overlay.querySelector(".intro-progress").addEventListener("animationend", finish, { once: true });
+      fallbackTimer = window.setTimeout(finish, 1500);
+    }
   };
   const showFrontendError = () => {
     removeIntro();
@@ -60,6 +67,15 @@
   });
   const config = window.MR_MESOFF_CONFIG;
   const path = window.location.pathname.replace(/\/$/, "") || "/";
+  if (path === "/download") {
+    const intro = document.querySelector(".download-intro .container");
+    if (intro) {
+      const badge = document.createElement("span");
+      badge.className = "beta-badge download-beta-badge";
+      badge.textContent = "Public Beta";
+      intro.prepend(badge);
+    }
+  }
   const setMeta = (selector, attribute, value) => {
     let element = document.head.querySelector(selector);
     if (!element) {
@@ -242,13 +258,6 @@
   if (platformPicker) {
     const panels = [...document.querySelectorAll("[data-platform-panel]")];
     const platformNames = { windows: "Windows", macos: "macOS", linux: "Linux" };
-    const platformIcons = { windows: "windows", macos: "macos", linux: "linux" };
-    platformPicker.querySelectorAll("[data-platform]").forEach((button) => {
-      const platform = button.dataset.platform;
-      const status = button.querySelector("small");
-      const label = button.childNodes[0].textContent.trim();
-      button.innerHTML = `<span>${icon(platformIcons[platform])}${label}</span>${status.outerHTML}`;
-    });
     panels.forEach((panel) => {
       const platform = panel.dataset.platformPanel;
       const downloadUrl = config.downloads[platform];
@@ -517,7 +526,7 @@
   setMeta('meta[name="twitter:image"]', "content", `${config.url}/assets/light/bannar.png`);
 
   const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  const revealItems = document.querySelectorAll(".page-intro .container, .product-image, .section-heading, .story-columns article, .feature-item, .step, .download-panel, .terminal, .price-option, .contact-box, .rich-content h2, .creator-mark, .footer-main > *");
+  const revealItems = document.querySelectorAll(".beta-notice, .page-intro .container, .product-image, .section-heading, .story-columns article, .feature-item, .step, .download-panel, .terminal, .price-option, .contact-box, .rich-content h2, .creator-mark, .footer-main > *");
   if ("IntersectionObserver" in window && !reducedMotion) {
     revealItems.forEach((item) => item.classList.add("reveal"));
     const observer = new IntersectionObserver((entries) => {
